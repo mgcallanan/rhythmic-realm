@@ -9,7 +9,7 @@
     "three.js",
     "CPSC 478",
     "spotify api",
-    "visualizer",
+    "keyword2",
     "...",
     "this last entry CANNOT have a comma after it ->"
   ],
@@ -38,7 +38,12 @@
     "raw-loader": "^4.0.1",
     "rimraf": "^3.0.2",
     "webpack": "^4.43.0",
-    "webpack-dev-server": "^3.10.3"
+    "webpack-dev-server": "^3.10.3",
+    "cookie-parser": "1.3.2",
+    "express": "~4.16.0",
+    "cors": "^2.8.4",
+    "querystring": "~0.2.0",
+    "request": "~2.83.0"
   },
   "engines": {
     "node": ">=8.0.0"
