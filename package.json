@@ -1,15 +1,15 @@
 {
-  "name": "lower-case-dashed-name-of-project",
-  "repository": "REPOSITORY-NAME-AS-IT-APPEARS-IN-GITHUB-URL",
+  "name": "rhythmic-realm",
+  "repository": "rhythmic-realm",
   "version": "0.1.0",
-  "title": "PROJECT TITLE HERE",
-  "description": "SHORT DESCRIPTION OF PROJECT HERE. ONE TO TWO SENTENCES MAX",
+  "title": "Rhythmic Realm",
+  "description": "A web visualizer of music playback using the Spotify API and ThreeJS",
   "keywords": [
     "graphics",
     "three.js",
     "CPSC 478",
-    "keyword1",
-    "keyword2",
+    "spotify api",
+    "visualizer",
     "...",
     "this last entry CANNOT have a comma after it ->"
   ],
