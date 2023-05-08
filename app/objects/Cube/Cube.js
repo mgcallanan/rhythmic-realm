@@ -17,6 +17,8 @@ export default class Cube extends Group {
       justScaledUp: false,
       bpmMilliSeconds: (60 / flowersAudioAnalysis.track.tempo) * 1000, // convert bpm to beats per second
       bpmFactor: 0.5,
+      sectionIndex: 0,
+      sections: flowersAudioAnalysis.sections,
     };
 
     this.loadingFunction = (p) => {
@@ -29,13 +31,12 @@ export default class Cube extends Group {
 
   load() {
     const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const material = new THREE.MeshStandardMaterial({ color: 0x1db954 });
     const cube = new THREE.Mesh(geometry, material);
-    // cube.rotation.set(0, Math.PI, 0);
-    // cube.scale.set(1.2, 1.2, 1.2);
+
     this.cube = cube;
     // this.scale.set(20, 20, 20);
-    // var tween = new TWEEN.Tween(cube.scale.y)
+    // var tween = new TWEEN.Tween(cube.scale)
     //   .to({ y: 10 }, 3000)
     //   .easing(TWEEN.Easing.Cubic.Out)
     //   .start();
@@ -44,12 +45,25 @@ export default class Cube extends Group {
 
   update(timeStamp) {
     // console.log(timeStamp % this.state.bpmMilliSeconds);
+
+    //denoising with mod since timestamp is never exact multiple
+
+    //Scale cube up and down on beat
     if (timeStamp % this.state.bpmMilliSeconds < 50) {
       //   console.log('hey');
       this.scale.x += this.state.bpmFactor;
       this.scale.y += this.state.bpmFactor;
       this.scale.z += this.state.bpmFactor;
     }
+
+    //change color on section change
+    // if (this.state.sectionIndex < this.state.sections.length - 1) {
+    //   const nextStart =
+    //     this.state.sections[this.state.sectionIndex + 1].start * 1000;
+    //   if (timeStamp % nextStart < 10) {
+    //     this.state.sectionIndex += 1;
+    //   }
+    // }
 
     if (
       (this.scale.x <= 0.6 && this.scale.y <= 0.6 && this.scale.z <= 0.6) ||

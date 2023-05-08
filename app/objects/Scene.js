@@ -1,4 +1,4 @@
-import { Group } from 'three';
+import { Group, Color } from 'three';
 import Land from './Land/Land.js';
 import Flower from './Flower/Flower.js';
 import Cube from './Cube/Cube.js';
@@ -13,6 +13,8 @@ export default class SeedScene extends Group {
       rotationSpeed: 2,
       updateList: [],
     };
+
+    this.background = new Color(0xffffff);
 
     const land = new Land();
     const flower = new Flower();

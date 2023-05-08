@@ -12,6 +12,7 @@ import * as THREE from 'three'; // used for Orbit Controls
 import SeedScene from './objects/Scene.js';
 import { ShaderPass, RenderPass } from './Renderer/EffectRenderer';
 import { FXAAShader } from './Shaders/fxaa/fxaa';
+import { flowersAudioAnalysis } from '../data/spotify_data';
 
 // React  Imports
 import React from 'react';
@@ -20,8 +21,14 @@ import { Provider } from 'react-redux';
 import store from './stores/store';
 import Main from './components/Main.jsx';
 
+let SECTION_INDEX = 0;
+let SECTIONS = flowersAudioAnalysis.sections;
+let LAST_MOD = 0;
+
 // Set up scene
 const scene = new Scene();
+scene.background = new THREE.Color(0x212121);
+
 const camera = new PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
@@ -80,15 +87,34 @@ document.body.appendChild(style);
 
 // Render loop
 const onAnimationFrameHandler = (timeStamp) => {
+  //lerp background color on section change
+  if (SECTION_INDEX < SECTIONS.length - 1) {
+    const nextStart = SECTIONS[SECTION_INDEX + 1].start * 1000;
+    console.log(SECTION_INDEX, SECTIONS, timeStamp % nextStart);
+
+    if (timeStamp % nextStart < 20) {
+      SECTION_INDEX += 1;
+      console.log('next');
+    }
+  }
   // controls.update();
   // renderer.render(scene, camera);
   seedScene.update(timeStamp);
   window.requestAnimationFrame(onAnimationFrameHandler);
+
+  // var startColor = new THREE.Color(0xff0000);
+  // startColor.setHex(Math.random() * 0xffffff);
+  // var endColor = new THREE.Color(0x00ff00);
+  // endColor.setHex(Math.random() * 0xffffff);
+
+  // let s = Math.sin(timeStamp * 2.0) * 0.5 + 0.5;
+  // cube.material.color.copy(startColor).lerpHSL(endColor, s);
 };
 window.requestAnimationFrame(onAnimationFrameHandler);
 
 // Renderer Go!
-renderer.renderer.setClearColor(0x7ec0ee, 1);
+//Background Color, Original: 0x7ec0ee
+// renderer.renderer.setClearColor(0x212121, 1);
 renderer.start();
 
 // React
