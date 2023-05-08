@@ -1,6 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
-import { setIslandScale, setDirIten, setLightColor } from "../stores/AppStore";
+import {
+  setIslandScale,
+  setDirIten,
+  setLightColor,
+  setSong,
+} from "../stores/AppStore";
 import RangeInputSet from "./RangeInputSet.jsx";
 import SongSelect from "./SongSelect.jsx";
 
@@ -12,7 +17,7 @@ class Main extends React.Component {
       width: 260,
       height: "100vh",
     };
-    const { islandScale, dirinten, lightcolor } = this.props.app;
+    const { islandScale, dirinten, lightcolor, song } = this.props.app;
 
     return (
       <div style={wrapStyle}>
@@ -24,16 +29,6 @@ class Main extends React.Component {
         </p>
         <form>
           <fieldset>
-            <RangeInputSet
-              label={"Island Scale"}
-              min={0.4}
-              max={2}
-              step={0.05}
-              value={islandScale}
-              onChange={(v) => {
-                this.props.dispatch(setIslandScale(v));
-              }}
-            />
             <RangeInputSet
               label={"Light Intensity"}
               min={0}

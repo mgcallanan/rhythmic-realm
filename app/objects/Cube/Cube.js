@@ -3,10 +3,17 @@
  */
 import * as THREE from 'three'; // used for Orbit Controls
 import { Group } from 'three';
+import store from '../../stores/store';
 import TWEEN from '@tweenjs/tween.js';
 import {
+  alaskaAudioAnalysis,
+  alaskaAudioFeatures,
   flowersAudioAnalysis,
   flowersAudioFeatures,
+  good4uAudioAnalysis,
+  good4uAudioFeatures,
+  lizAudioAnalysis,
+  lizAudioFeatures,
 } from '../../../data/spotify_data';
 
 export default class Cube extends Group {
@@ -14,12 +21,26 @@ export default class Cube extends Group {
     super();
 
     this.state = {
+      currentAudioAnalysis: flowersAudioAnalysis,
+      currentAudioFeatures: flowersAudioFeatures,
       justScaledUp: false,
       bpmMilliSeconds: (60 / flowersAudioAnalysis.track.tempo) * 1000, // convert bpm to beats per second
-      bpmFactor: 0.4,
+      bpmFactor: 0.5,
       sectionIndex: 0,
       sections: flowersAudioAnalysis.sections,
     };
+
+    store.subscribe(() => {
+      const { song, currentAudioAnalysis, currentAudioFeatures } =
+        store.getState().App;
+      this.state.currentAudioAnalysis = currentAudioAnalysis;
+      this.state.currentAudioFeatures = currentAudioFeatures;
+
+      this.state.bpmMilliSeconds =
+        (60 / this.state.currentAudioAnalysis.track.tempo) * 1000;
+      this.state.sectionIndex = 0;
+      this.state.sections = this.state.currentAudioAnalysis.sections;
+    });
 
     this.loadingFunction = (p) => {
       console.log('loading cube', p);
@@ -56,20 +77,19 @@ export default class Cube extends Group {
       this.scale.z += this.state.bpmFactor;
     }
 
-    //change color on section change
-    // if (this.state.sectionIndex < this.state.sections.length - 1) {
-    //   const nextStart =
-    //     this.state.sections[this.state.sectionIndex + 1].start * 1000;
-    //   if (timeStamp % nextStart < 10) {
-    //     this.state.sectionIndex += 1;
-    //   }
-    // }
-
     if (
       (this.scale.x <= 0.6 && this.scale.y <= 0.6 && this.scale.z <= 0.6) ||
       (this.scale.x >= 10 && this.scale.y >= 10 && this.scale.z >= 10)
     ) {
-      console.log(this.scale, 'chainging');
+      if (this.scale.x <= 0.6 && this.scale.y <= 0.6 && this.scale.z <= 0.6) {
+        this.scale.x = 0.6;
+        this.scale.y = 0.6;
+        this.scale.z = 0.6;
+      } else {
+        this.scale.x = 10;
+        this.scale.y = 10;
+        this.scale.z = 10;
+      }
       this.state.bpmFactor *= -1;
     }
   }
