@@ -1,57 +1,49 @@
-const path = require("path");
-const pkg = require("./package.json");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const buildPath = "./build/";
+const path = require('path');
+const pkg = require('./package.json');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+//const DEBUG = process.env.NODE_ENV !== 'production';
 
 module.exports = {
-  entry: ["./src/app.js"],
+  entry: './app/app.js',
   output: {
-    path: path.join(__dirname, buildPath),
-    filename: "[name].[hash].js",
-    publicPath: `/${pkg.repository}/`,
+    path: path.join(__dirname, pkg.config.build),
+    filename: '[name].[hash].js'
   },
-  target: "web",
-  devtool: "source-map",
-  stats: {
-    warnings: false,
-  },
+  target: 'web',
+  devtool: 'source-map',
   module: {
     rules: [
       {
-        test: /\.js$/,
-        use: "babel-loader",
-        exclude: path.resolve(__dirname, "./node_modules/"),
+        test: /\.(js|jsx)$/,
+        use: 'babel-loader',
+        exclude: path.resolve(__dirname, './node_modules/')
       },
       {
         test: /\.(jpe?g|png|gif|svg|tga|gltf|babylon|mtl|pcb|pcd|prwm|obj|mat|mp3|ogg)$/i,
-        use: "file-loader",
-        exclude: path.resolve(__dirname, "./node_modules/"),
+        use: 'file-loader',
+        exclude: path.resolve(__dirname, './node_modules/')
       },
       {
         test: /\.(vert|frag|glsl|shader|txt)$/i,
-        use: "raw-loader",
-        exclude: path.resolve(__dirname, "./node_modules/"),
+        use: 'raw-loader',
+        exclude: path.resolve(__dirname, './node_modules/')
       },
       {
-        type: "javascript/auto",
+        type: 'javascript/auto',
         test: /\.(json)/,
-        exclude: path.resolve(__dirname, "./node_modules/"),
+        exclude: path.resolve(__dirname, './node_modules/'),
         use: [
           {
-            loader: "file-loader",
-          },
-        ],
-      },
-    ],
+            loader: 'file-loader'
+          }
+        ]
+      }
+    ]
   },
-  resolve: {
-    alias: {
-      lights$: path.resolve(__dirname, "src/components/lights"),
-      objects$: path.resolve(__dirname, "src/components/objects"),
-      scenes$: path.resolve(__dirname, "src/components/scenes"),
-    },
-  },
-  plugins: [
-    new HtmlWebpackPlugin({ title: pkg.title, favicon: "src/favicon.ico" }),
-  ],
+  plugins: [new HtmlWebpackPlugin({ title: pkg.config.title })],
+  devServer: {
+    contentBase: path.join(__dirname, 'build'),
+    compress: true,
+    port: 8080
+  }
 };
