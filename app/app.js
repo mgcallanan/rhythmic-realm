@@ -22,26 +22,37 @@ import Main from './components/Main.jsx';
 
 // Set up scene
 const scene = new Scene();
-const camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
-const renderer = new Renderer({antialias: false}, scene, camera);
+const camera = new PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  1,
+  10000
+);
+const renderer = new Renderer({ antialias: false }, scene, camera);
 
 // Post processing
 const rPass = new RenderPass(scene, camera);
 const FXAA = new ShaderPass(FXAAShader);
 renderer.addPass(rPass);
-FXAA.uniforms.resolution.value.set(window.innerWidth * 2, window.innerHeight * 2);
+FXAA.uniforms.resolution.value.set(
+  window.innerWidth * 2,
+  window.innerHeight * 2
+);
 FXAA.renderToScreen = true;
 renderer.addPass(FXAA);
 
 // Update FXAA on resize from Redux
-store.subscribe( ()=>{
+store.subscribe(() => {
   const { width, height, resolution } = store.getState().Renderer;
   // set camera
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
   // update the FXAA pass
-  renderer.passes[1].uniforms.resolution.value.set(width * resolution, height * resolution);
-} );
+  renderer.passes[1].uniforms.resolution.value.set(
+    width * resolution,
+    height * resolution
+  );
+});
 
 // Camera, Controls and Scene
 const OrbitControls = require('three-orbit-controls')(THREE); // yuk
@@ -49,25 +60,35 @@ const seedScene = new SeedScene();
 
 new OrbitControls(camera, renderer.domElement);
 scene.add(seedScene);
-camera.position.set(-2,2,10);
-camera.lookAt(new Vector3(0,0,0));
+camera.position.set(-2, 2, 10);
+camera.lookAt(new Vector3(0, 0, 0));
 
 // DOM
 const reactDiv = document.createElement('div');
 document.body.style.margin = 0;
 document.body.style.overflow = 'hidden';
-document.body.appendChild( reactDiv )
-document.body.appendChild( renderer.domElement );
+document.body.appendChild(reactDiv);
+document.body.appendChild(renderer.domElement);
 
 // Basic CSS Import
-const CSSURL = '//cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css'
+const CSSURL =
+  '//cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css';
 const style = document.createElement('link');
 style.setAttribute('href', CSSURL);
 style.setAttribute('rel', 'stylesheet');
 document.body.appendChild(style);
 
+// Render loop
+const onAnimationFrameHandler = (timeStamp) => {
+  // controls.update();
+  // renderer.render(scene, camera);
+  seedScene.update(timeStamp);
+  window.requestAnimationFrame(onAnimationFrameHandler);
+};
+window.requestAnimationFrame(onAnimationFrameHandler);
+
 // Renderer Go!
-renderer.renderer.setClearColor(0x7ec0ee,1);
+renderer.renderer.setClearColor(0x7ec0ee, 1);
 renderer.start();
 
 // React
@@ -82,5 +103,3 @@ render(
 // https://chrome.google.com/webstore/detail/threejs-inspector/dnhjfclbfhcbcdfpjaeacomhbdfjbebi?hl=en
 // window.THREE = THREE;
 // window.scene = scene;
-
-

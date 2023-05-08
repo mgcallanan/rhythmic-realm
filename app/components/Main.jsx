@@ -15,7 +15,7 @@ class Main extends React.Component {
 
     return (
       <div style={wrapStyle}>
-        <h2>Three Seed</h2>
+        <h2>Rhythmic Realm</h2>
         <p>
           Three.js project biolerplate with ES6 and React/Redux controls. Design
           Goal: to get projects up and running fast. Get the code on{" "}

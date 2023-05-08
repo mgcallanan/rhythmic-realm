@@ -11,3 +11,5 @@ trim_trailing_whitespace = true
 [*.{js,json,jshintrc,html}]
 indent_style = space
 indent_size = 2
+quote_type = single
+comma_dangle = never
