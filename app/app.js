@@ -90,7 +90,7 @@ const onAnimationFrameHandler = (timeStamp) => {
   //lerp background color on section change
   if (SECTION_INDEX < SECTIONS.length - 1) {
     const nextStart = SECTIONS[SECTION_INDEX + 1].start * 1000;
-    console.log(SECTION_INDEX, SECTIONS, timeStamp % nextStart);
+    // console.log(SECTION_INDEX, SECTIONS, timeStamp % nextStart);
 
     if (timeStamp % nextStart < 20) {
       SECTION_INDEX += 1;

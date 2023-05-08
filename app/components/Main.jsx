@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { setIslandScale, setDirIten, setLightColor } from "../stores/AppStore";
 import RangeInputSet from "./RangeInputSet.jsx";
+import SongSelect from "./SongSelect.jsx";
 
 class Main extends React.Component {
   render() {
@@ -49,6 +50,16 @@ class Main extends React.Component {
               value={lightcolor}
               onChange={(e) => {
                 this.props.dispatch(setLightColor(e.target.value));
+              }}
+            />
+            <SongSelect
+              label={"Current Song"}
+              min={0}
+              max={3}
+              step={0.05}
+              value={dirinten}
+              onChange={(v) => {
+                this.props.dispatch(setSong(v));
               }}
             />
             <button>Login With Spotify</button>

@@ -16,7 +16,7 @@ export default class Cube extends Group {
     this.state = {
       justScaledUp: false,
       bpmMilliSeconds: (60 / flowersAudioAnalysis.track.tempo) * 1000, // convert bpm to beats per second
-      bpmFactor: 0.5,
+      bpmFactor: 0.4,
       sectionIndex: 0,
       sections: flowersAudioAnalysis.sections,
     };
@@ -69,6 +69,7 @@ export default class Cube extends Group {
       (this.scale.x <= 0.6 && this.scale.y <= 0.6 && this.scale.z <= 0.6) ||
       (this.scale.x >= 10 && this.scale.y >= 10 && this.scale.z >= 10)
     ) {
+      console.log(this.scale, 'chainging');
       this.state.bpmFactor *= -1;
     }
   }
