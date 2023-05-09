@@ -24,9 +24,11 @@ export default class SeedScene extends Group {
     // this.add(land, flower, cube, lights);
     this.add(cube, lights);
     this.addToUpdateList(cube);
+    this.addToUpdateList(lights);
   }
 
   addToUpdateList(object) {
+    // console.log(object);
     this.state.updateList.push(object);
   }
 

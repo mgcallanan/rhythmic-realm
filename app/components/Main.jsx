@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { setIslandScale, setDirIten, setLightColor } from "../stores/AppStore";
+import { setIslandScale, setDirIten, setLightColor, setObjectColor} from "../stores/AppStore";
 import RangeInputSet from "./RangeInputSet.jsx";
 import SongSelect from "./SongSelect.jsx";
 
@@ -12,7 +12,7 @@ class Main extends React.Component {
       width: 260,
       height: "100vh",
     };
-    const { islandScale, dirinten, lightcolor } = this.props.app;
+    const { islandScale, dirinten, lightcolor, objectcolor} = this.props.app;
 
     return (
       <div style={wrapStyle}>
@@ -44,14 +44,22 @@ class Main extends React.Component {
                 this.props.dispatch(setDirIten(v));
               }}
             />
-            <label>Light Color</label>
+            {/* <label>Light Color</label>
             <input
               type="color"
               value={lightcolor}
               onChange={(e) => {
                 this.props.dispatch(setLightColor(e.target.value));
               }}
-            />
+            /> */}
+            {/* <label>Cube Color</label>
+            <input
+              type="color"
+              value={objectcolor}
+              onChange={(f) => {
+                this.props.dispatch(setObjectColor(f.target.value));
+              }}
+            /> */}
             <SongSelect
               label={"Current Song"}
               min={0}

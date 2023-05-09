@@ -1,6 +1,7 @@
 const ISCALE = 'app/IslandScale';
 const DIRITEN = 'app/diriten';
 const LIGHTCOLOR = 'app/lightcolor';
+const OBJECTCOLOR = 'app/objectcolor'
 const SONG = 'app/song';
 
 export default (
@@ -8,6 +9,7 @@ export default (
     islandScale: 1,
     dirinten: 1.15,
     lightcolor: '#FEFEFE',
+    objectcolor: '#FEFEFE',
     song: 'Flowers',
   },
   action = {}
@@ -29,6 +31,12 @@ export default (
       return {
         ...state,
         lightcolor: action.value,
+      };
+    }
+    case OBJECTCOLOR: {
+      return {
+        ...state,
+        objectcolor: action.value,
       };
     }
     case SONG: {
@@ -54,6 +62,11 @@ export const setDirIten = (value) => ({
 
 export const setLightColor = (value) => ({
   type: LIGHTCOLOR,
+  value,
+});
+
+export const setObjectColor = (value) => ({
+  type: OBJECTCOLOR,
   value,
 });
 
