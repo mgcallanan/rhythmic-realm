@@ -9,6 +9,10 @@ import {
   flowersAudioFeatures,
   alaskaAudioAnalysis,
   alaskaAudioFeatures,
+  good4uAudioAnalysis,
+  good4uAudioFeatures,
+  lizAudioAnalysis,
+  lizAudioFeatures,
 } from '../../../data/spotify_data';
 import store from '../../stores/store';
 import { hexToRgb, rgbToHex, rgbToHsv, hsvToRgb} from '../util.js';
@@ -18,12 +22,26 @@ export default class Cube extends Group {
     super();
 
     this.state = {
+      currentAudioAnalysis: flowersAudioAnalysis,
+      currentAudioFeatures: flowersAudioFeatures,
       justScaledUp: false,
       bpmMilliSeconds: (60 / flowersAudioAnalysis.track.tempo) * 1000, // convert bpm to beats per second
-      bpmFactor: 0.4,
+      bpmFactor: 0.5,
       sectionIndex: 0,
       sections: flowersAudioAnalysis.sections,
     };
+
+    store.subscribe(() => {
+      const { song, currentAudioAnalysis, currentAudioFeatures } =
+        store.getState().App;
+      this.state.currentAudioAnalysis = currentAudioAnalysis;
+      this.state.currentAudioFeatures = currentAudioFeatures;
+
+      this.state.bpmMilliSeconds =
+        (60 / this.state.currentAudioAnalysis.track.tempo) * 1000;
+      this.state.sectionIndex = 0;
+      this.state.sections = this.state.currentAudioAnalysis.sections;
+    });
 
     this.loadingFunction = (p) => {
       console.log('loading cube', p);
