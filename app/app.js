@@ -28,10 +28,14 @@ import './styles.css';
 let SECTION_INDEX = 0;
 let SECTIONS = flowersAudioAnalysis.sections;
 let LERPING = false;
+let START_LERP_TIMESTAMP = 0;
+let LERP_LENGTH = 10000;
+
+let CURRENT_COLOR = new THREE.Color(0x212121);
+let NEW_COLOR = new THREE.Color();
 // Set up scene
-// const scene = new Scene();
-const spotifyScene = new SpotifyScene();
-// scene.background = new THREE.Color(0x212121);
+const scene = new Scene();
+scene.background = CURRENT_COLOR;
 
 const camera = new PerspectiveCamera(
   75,
@@ -39,10 +43,10 @@ const camera = new PerspectiveCamera(
   1,
   10000
 );
-const renderer = new Renderer({ antialias: false }, spotifyScene, camera);
+const renderer = new Renderer({ antialias: false }, scene, camera);
 
 // Post processing
-const rPass = new RenderPass(spotifyScene, camera);
+const rPass = new RenderPass(scene, camera);
 const FXAA = new ShaderPass(FXAAShader);
 renderer.addPass(rPass);
 FXAA.uniforms.resolution.value.set(
@@ -71,8 +75,8 @@ const seedScene = new SeedScene();
 
 new OrbitControls(camera, renderer.domElement);
 // scene.add(seedScene);
-spotifyScene.add(seedScene);
-spotifyScene.addToUpdateList(seedScene);
+scene.add(seedScene);
+
 camera.position.set(-2, 2, 10);
 camera.lookAt(new Vector3(0, 0, 0));
 
@@ -96,36 +100,36 @@ const onAnimationFrameHandler = (timeStamp) => {
   //lerp background color on section change
   // let newColor = new THREE.Color();
   // let currentColor = new THREE.Color();
-  // if (SECTION_INDEX < SECTIONS.length - 1) {
-  //   const nextStart = SECTIONS[SECTION_INDEX + 1].start * 1000;
-  //   // console.log(SECTION_INDEX, SECTIONS, timeStamp % nextStart);
+  if (SECTION_INDEX < SECTIONS.length - 1) {
+    const nextStart = SECTIONS[SECTION_INDEX + 1].start * 1000;
+    // console.log(SECTION_INDEX, SECTIONS, timeStamp % nextStart);
 
-  //   if (timeStamp % nextStart < 20) {
-  //     LERPING = true;
-  //     SECTION_INDEX += 1;
-  //     newColor.setHex(Math.random() * 0xffffff);
+    if (timeStamp % nextStart < 20) {
+      LERPING = true;
+      SECTION_INDEX += 1;
+      NEW_COLOR.setHex(Math.random() * 0xffffff);
 
-  //     currentColor.copy(scene.background);
-  //     console.log(currentColor);
+      CURRENT_COLOR.copy(scene.background);
 
-  //     // from here: https://jsfiddle.net/prisoner849/1k397beg/
+      // from here: https://jsfiddle.net/prisoner849/1k397beg/
 
-  //     console.log('next');
-  //   }
-  // }
+      START_LERP_TIMESTAMP = timeStamp;
+    }
+  }
 
-  // if (LERPING) {
-  //   let s = Math.sin(timeStamp * 2.0) * 0.5 + 0.5;
-  //   // console.log(s);
-  //   scene.background.copy(currentColor).lerp(newColor, s);
-  //   if (s >= 1.0) {
-  //     LERPING = false;
-  //   }
-  // }
+  if (LERPING) {
+    let timeSinceLerp = timeStamp - START_LERP_TIMESTAMP;
+    let progress = timeSinceLerp / LERP_LENGTH;
+    scene.background.copy(CURRENT_COLOR).lerp(NEW_COLOR, progress);
+    if (progress >= 1.0) {
+      LERPING = false;
+      scene.background.copy(NEW_COLOR);
+    }
+  }
   // controls.update();
   // renderer.render(scene, camera);
-  // seedScene.update(timeStamp);
-  spotifyScene.update(timeStamp);
+  seedScene.update(timeStamp);
+  // scene.update(timeStamp);
   window.requestAnimationFrame(onAnimationFrameHandler);
 
   // var startColor = new THREE.Color(0xff0000);
@@ -148,7 +152,7 @@ render(
   <Provider store={store}>
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Main/>} />
+        <Route path="/" element={<Main />} />
         {/* <Route path='/callback' element={<Callback/>} /> */}
       </Routes>
     </BrowserRouter>

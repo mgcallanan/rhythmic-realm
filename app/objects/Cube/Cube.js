@@ -32,15 +32,18 @@ export default class Cube extends Group {
     };
 
     store.subscribe(() => {
+      console.log(this.state);
       const { song, currentAudioAnalysis, currentAudioFeatures } =
         store.getState().App;
       this.state.currentAudioAnalysis = currentAudioAnalysis;
       this.state.currentAudioFeatures = currentAudioFeatures;
 
-      this.state.bpmMilliSeconds =
-        (60 / this.state.currentAudioAnalysis.track.tempo) * 1000;
-      this.state.sectionIndex = 0;
-      this.state.sections = this.state.currentAudioAnalysis.sections;
+      if (this.state.currentAudioAnalysis && this.state.currentAudioFeatures) {
+        this.state.bpmMilliSeconds =
+          (60 / this.state.currentAudioAnalysis.track.tempo) * 1000;
+        this.state.sectionIndex = 0;
+        this.state.sections = this.state.currentAudioAnalysis.sections;
+      }
     });
 
     this.loadingFunction = (p) => {
