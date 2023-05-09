@@ -126,7 +126,7 @@ render(
   <Provider store={store}>
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Main/>} />
+        <Route path='/rhythmic-realm' element={<Main/>} />
         {/* <Route path='/callback' element={<Callback/>} /> */}
       </Routes>
     </BrowserRouter>

@@ -58,7 +58,8 @@ class Main extends React.Component {
     event.preventDefault();
 
     const CLIENT_ID = 'df2ae4f57ee94424b0371c4d16d075a6';
-    const REDIRECT_URI = window.location.origin;
+    const REDIRECT_URI = window.location.origin + "/rhythmic-realm";
+    console.log("redirect_uri " + REDIRECT_URI)
     const AUTH_URL = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=playlist-modify-public`;
 
   
