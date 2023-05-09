@@ -2,7 +2,7 @@ import { Group, Color } from 'three';
 import Land from './Land/Land.js';
 import Flower from './Flower/Flower.js';
 import Cube from './Cube/Cube.js';
-import BasicLights from './BasicLights';
+import BasicLights from './BasicLights.js';
 
 export default class SeedScene extends Group {
   constructor() {
