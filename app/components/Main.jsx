@@ -9,6 +9,7 @@ import {
 } from "../stores/AppStore";
 import RangeInputSet from "./RangeInputSet.jsx";
 import SongSelect from "./SongSelect.jsx";
+import SongPlayer from "./SongPlayer.jsx";
 
 class Main extends React.Component {
 
@@ -30,7 +31,7 @@ class Main extends React.Component {
         acc[key] = value;
         return acc;
       }, {});
-  
+
     if (hash.access_token) {
       localStorage.setItem('spotify_access_token', hash.access_token);
       window.location.hash = ''; // Clear the token from the URL
@@ -44,7 +45,7 @@ class Main extends React.Component {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-  
+
     if (response.ok) {
       const data = await response.json();
       // console.log(data)
@@ -62,10 +63,10 @@ class Main extends React.Component {
     const REDIRECT_URI = window.location.origin;
     const AUTH_URL = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=playlist-modify-public`;
 
-  
+
     window.location = AUTH_URL;
   };
-  
+
     render() {
     const wrapStyle = {
       position: 'absolute',
@@ -85,7 +86,7 @@ class Main extends React.Component {
     return (
       <div style={wrapStyle}>
         <h2>Rhythmic Realm</h2>
-        <p>
+        {/* <p>
           Three.js project biolerplate with ES6 and React/Redux controls. Design
           Goal: to get projects up and running fast. Get the code on{' '}
           <a href='https://github.com/edwinwebb/three-seed/'>GitHub</a>
@@ -134,6 +135,7 @@ class Main extends React.Component {
             )}
           </fieldset>
         </form>
+        {/* <SongPlayer /> */}
       </div>
     );
   }

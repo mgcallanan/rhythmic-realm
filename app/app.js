@@ -9,7 +9,7 @@
 import Renderer from './Renderer/EffectRenderer';
 import { Scene, PerspectiveCamera, Vector3 } from 'three';
 import * as THREE from 'three'; // used for Orbit Controls
-import SeedScene from './objects/Scene.js';
+import SeedScene from './objects/SeedScene.js';
 import { ShaderPass, RenderPass } from './Renderer/EffectRenderer';
 import { FXAAShader } from './Shaders/fxaa/fxaa';
 import { flowersAudioAnalysis } from '../data/spotify_data';
@@ -27,11 +27,11 @@ import './styles.css';
 
 let SECTION_INDEX = 0;
 let SECTIONS = flowersAudioAnalysis.sections;
-let LAST_MOD = 0;
-
+let LERPING = false;
 // Set up scene
-const scene = new Scene();
-scene.background = new THREE.Color(0x212121);
+// const scene = new Scene();
+const spotifyScene = new SpotifyScene();
+// scene.background = new THREE.Color(0x212121);
 
 const camera = new PerspectiveCamera(
   75,
@@ -39,10 +39,10 @@ const camera = new PerspectiveCamera(
   1,
   10000
 );
-const renderer = new Renderer({ antialias: false }, scene, camera);
+const renderer = new Renderer({ antialias: false }, spotifyScene, camera);
 
 // Post processing
-const rPass = new RenderPass(scene, camera);
+const rPass = new RenderPass(spotifyScene, camera);
 const FXAA = new ShaderPass(FXAAShader);
 renderer.addPass(rPass);
 FXAA.uniforms.resolution.value.set(
@@ -70,7 +70,9 @@ const OrbitControls = require('three-orbit-controls')(THREE); // yuk
 const seedScene = new SeedScene();
 
 new OrbitControls(camera, renderer.domElement);
-scene.add(seedScene);
+// scene.add(seedScene);
+spotifyScene.add(seedScene);
+spotifyScene.addToUpdateList(seedScene);
 camera.position.set(-2, 2, 10);
 camera.lookAt(new Vector3(0, 0, 0));
 
@@ -92,18 +94,38 @@ document.body.appendChild(style);
 // Render loop
 const onAnimationFrameHandler = (timeStamp) => {
   //lerp background color on section change
-  if (SECTION_INDEX < SECTIONS.length - 1) {
-    const nextStart = SECTIONS[SECTION_INDEX + 1].start * 1000;
-    // console.log(SECTION_INDEX, SECTIONS, timeStamp % nextStart);
+  // let newColor = new THREE.Color();
+  // let currentColor = new THREE.Color();
+  // if (SECTION_INDEX < SECTIONS.length - 1) {
+  //   const nextStart = SECTIONS[SECTION_INDEX + 1].start * 1000;
+  //   // console.log(SECTION_INDEX, SECTIONS, timeStamp % nextStart);
 
-    if (timeStamp % nextStart < 20) {
-      SECTION_INDEX += 1;
-      console.log('next');
-    }
-  }
+  //   if (timeStamp % nextStart < 20) {
+  //     LERPING = true;
+  //     SECTION_INDEX += 1;
+  //     newColor.setHex(Math.random() * 0xffffff);
+
+  //     currentColor.copy(scene.background);
+  //     console.log(currentColor);
+
+  //     // from here: https://jsfiddle.net/prisoner849/1k397beg/
+
+  //     console.log('next');
+  //   }
+  // }
+
+  // if (LERPING) {
+  //   let s = Math.sin(timeStamp * 2.0) * 0.5 + 0.5;
+  //   // console.log(s);
+  //   scene.background.copy(currentColor).lerp(newColor, s);
+  //   if (s >= 1.0) {
+  //     LERPING = false;
+  //   }
+  // }
   // controls.update();
   // renderer.render(scene, camera);
-  seedScene.update(timeStamp);
+  // seedScene.update(timeStamp);
+  spotifyScene.update(timeStamp);
   window.requestAnimationFrame(onAnimationFrameHandler);
 
   // var startColor = new THREE.Color(0xff0000);
