@@ -21,11 +21,12 @@
   "scripts": {
     "start": "NODE_ENV=development webpack-dev-server",
     "prebuild": "npm run clean",
-    "build": "NODE_ENV=production webpack",
+    "build": "NODE_ENV=production webpack && cp build/index.html build/404.html",
     "clean": "rimraf ./build && mkdir ./build",
     "lint": "eslint ./app/**/*.js",
     "reactman": "reactman --config ./templates/reactman.config.js",
-    "deploy": "npm run prebuild && webpack --mode production --progress && gh-pages -d build"
+    "deploy": "npm run prebuild && webpack --mode production --progress && gh-pages -d build",
+    "deploynob": "gh-pages -d build"
   },
   "config": {
     "title": "Rhythmic Realm",

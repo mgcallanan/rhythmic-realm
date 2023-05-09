@@ -20,6 +20,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import store from './stores/store';
 import Main from './components/Main.jsx';
+import Callback from './components/Callback.jsx';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // Styles
@@ -124,10 +125,14 @@ renderer.start();
 // React
 render(
   <Provider store={store}>
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.path}>
       <Routes>
-        <Route path='/rhythmic-realm' element={<Main/>} />
-        {/* <Route path='/callback' element={<Callback/>} /> */}
+        {/* For use during deployment */}
+        <Route path='/rhythmic-realm/' element={<Main/>} />
+        <Route path='/rhythmic-realm/callback' element={<Callback/>} />
+        {/* For use during production */}
+        <Route path='/' element={<Main/>} />
+        <Route path='/callback' element={<Callback/>} />
       </Routes>
     </BrowserRouter>
   </Provider>,

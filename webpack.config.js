@@ -8,6 +8,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, pkg.config.build),
     filename: '[name].[hash].js',
+    // publicPath: '/',
   },
   target: 'web',
   devtool: 'source-map',
@@ -45,5 +46,6 @@ module.exports = {
     contentBase: path.join(__dirname, 'build'),
     compress: true,
     port: 8080,
+    historyApiFallback: true,
   },
 };
