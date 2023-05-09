@@ -2,30 +2,20 @@ import React from "react";
 
 export default class SongSelect extends React.Component {
   render() {
-    const {
-      min = 0,
-      max = 10,
-      step = 1,
-      value = 5,
-      label = "range",
-      onChange = () => {},
-    } = this.props;
+    const { label = "select", onChange = () => {} } = this.props;
     const changeHandler = (e) => {
-      onChange(parseFloat(e.target.value));
+      console.log(e);
+      onChange(e.target.value);
     };
     return (
       <div>
-        <label>
-          {label} <small>{value}</small>
-        </label>
-        <input
-          type="range"
-          min={min}
-          step={step}
-          max={max}
-          value={value}
-          onChange={changeHandler}
-        />
+        <label>{label}</label>
+        <select name="songs" id="cars" onChange={changeHandler}>
+          <option value="flowers">Flowers</option>
+          <option value="alaska">Alaska</option>
+          <option value="liz">Liz</option>
+          <option value="good4u">good 4 u</option>
+        </select>
       </div>
     );
   }

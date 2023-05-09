@@ -20,6 +20,10 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import store from './stores/store';
 import Main from './components/Main.jsx';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+// Styles
+import './styles.css';
 
 let SECTION_INDEX = 0;
 let SECTIONS = flowersAudioAnalysis.sections;
@@ -120,7 +124,12 @@ renderer.start();
 // React
 render(
   <Provider store={store}>
-    <Main />
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<Main/>} />
+        {/* <Route path='/callback' element={<Callback/>} /> */}
+      </Routes>
+    </BrowserRouter>
   </Provider>,
   reactDiv
 );
