@@ -15,7 +15,7 @@ import {
   lizAudioFeatures,
 } from '../../../data/spotify_data';
 import store from '../../stores/store';
-import { hexToRgb, rgbToHex, rgbToHsv, hsvToRgb} from '../util.js';
+import { hexToRgb, rgbToHex, rgbToHsv, hsvToRgb } from '../util.js';
 
 export default class Cube extends Group {
   constructor() {
@@ -26,30 +26,37 @@ export default class Cube extends Group {
       currentAudioFeatures: flowersAudioFeatures,
       justScaledUp: false,
       bpmMilliSeconds: (60 / flowersAudioAnalysis.track.tempo) * 1000, // convert bpm to beats per second
-      bpmFactor: 0.5,
+      bpmFactor: 4,
       sectionIndex: 0,
       sections: flowersAudioAnalysis.sections,
+      startScale: { x: 1, y: 1, z: 1 },
+      endScale: { x: 5, y: 5, z: 5 },
     };
 
     store.subscribe(() => {
+      console.log(this.state);
       const { song, currentAudioAnalysis, currentAudioFeatures } =
         store.getState().App;
       this.state.currentAudioAnalysis = currentAudioAnalysis;
       this.state.currentAudioFeatures = currentAudioFeatures;
 
-      this.state.bpmMilliSeconds =
-        (60 / this.state.currentAudioAnalysis.track.tempo) * 1000;
-      this.state.sectionIndex = 0;
-      this.state.sections = this.state.currentAudioAnalysis.sections;
+      if (this.state.currentAudioAnalysis && this.state.currentAudioFeatures) {
+        this.state.bpmMilliSeconds =
+          (60 / this.state.currentAudioAnalysis.track.tempo) * 1000;
+        this.state.sectionIndex = 0;
+        this.state.sections = this.state.currentAudioAnalysis.sections;
+      }
     });
 
     this.loadingFunction = (p) => {
       console.log('loading cube', p);
     };
 
-    var song_rgb = {r: Math.round(flowersAudioFeatures.energy * 255),
-                    g: Math.round(flowersAudioFeatures.acousticness * 255), 
-                    b: Math.round(flowersAudioFeatures.danceability * 255)};
+    var song_rgb = {
+      r: Math.round(flowersAudioFeatures.energy * 255),
+      g: Math.round(flowersAudioFeatures.acousticness * 255),
+      b: Math.round(flowersAudioFeatures.danceability * 255),
+    };
 
     // console.log(song_rgb);
 
@@ -75,7 +82,6 @@ export default class Cube extends Group {
   }
 
   load() {
-
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshStandardMaterial({ color: this.cubecolor });
     const cube = new THREE.Mesh(geometry, material);
@@ -89,8 +95,40 @@ export default class Cube extends Group {
     this.add(cube);
   }
 
-  update(timeStamp) {
+  scaleObject() {
+    TWEEN.removeAll();
+    let EaseOut = TWEEN.Easing.Linear.None;
+    let EaseIn = TWEEN.Easing.Linear.None;
 
+    let objShrink = new TWEEN.Tween(this.scale)
+      .to(this.state.startScale, this.state.bpmMilliSeconds)
+      .easing(EaseIn);
+
+    let objGrow = new TWEEN.Tween(this.scale)
+      .to(this.state.endScale, this.state.bpmMilliSeconds)
+      .easing(EaseOut);
+
+    if (this.scale.x > 2.5) {
+      objShrink.start();
+    } else {
+      objGrow.start();
+    }
+
+    // objGrow.chain(objShrink);
+    // objGrow.start();
+
+    // objGrow.start();
+
+    //   if (shrink) {
+    //   objShrink.start();
+    // } else {
+    //   objGrow.start();
+    // }
+
+    // this.state.bpmFactor *= -1;
+  }
+
+  update(timeStamp) {
     const second = timeStamp / 1000;
     // console.log(timeStamp % this.state.bpmMilliSeconds);
 
@@ -98,10 +136,11 @@ export default class Cube extends Group {
 
     //Scale cube up and down on beat
     if (timeStamp % this.state.bpmMilliSeconds < 50) {
+      this.scaleObject();
       //   console.log('hey');
-      this.scale.x += this.state.bpmFactor;
-      this.scale.y += this.state.bpmFactor;
-      this.scale.z += this.state.bpmFactor;
+      //   this.scale.x += this.state.bpmFactor;
+      //   this.scale.y += this.state.bpmFactor;
+      //   this.scale.z += this.state.bpmFactor;
     }
 
     // change color on section change
@@ -109,9 +148,9 @@ export default class Cube extends Group {
     if (this.state.sectionIndex < this.state.sections.length - 1) {
       const nextStart =
         this.state.sections[this.state.sectionIndex + 1].start * 1000;
-      if (timeStamp % nextStart < 10) {
+      if (timeStamp % nextStart < 20) {
         var factor = this.state.sections[this.state.sectionIndex].loudness;
-        factor *= - 2 / 60;
+        factor *= -2 / 60;
         // console.log(this.cubecolor)
         var rgb = hexToRgb(this.hex);
 
@@ -135,8 +174,8 @@ export default class Cube extends Group {
         var hex = rgbToHex(rgb);
         var new_color = parseInt(hex.replace('#', '0x'));
         this.currcolor = new_color;
-        console.log(this.cubecolor)
-        console.log(new_color)
+        console.log(this.cubecolor);
+        console.log(new_color);
         // this.cubecolor = parseInt(hex_new.replace('#', '0x'));
         // this.hex = hex_new
 
@@ -144,18 +183,21 @@ export default class Cube extends Group {
       }
     }
 
-    const cube = this.cube
+    // this.cube.material.color.set(this.currcolor);
+
+    const cube = this.cube;
     // console.log(cube)
     const material = new THREE.MeshStandardMaterial({ color: this.currcolor });
-    cube.material = material
-    this.cube = cube
+    cube.material = material;
+    this.cube = cube;
 
-    if (
-      (this.scale.x <= 0.6 && this.scale.y <= 0.6 && this.scale.z <= 0.6) ||
-      (this.scale.x >= 10 && this.scale.y >= 10 && this.scale.z >= 10)
-    ) {
-      console.log(this.scale, 'changing');
-      this.state.bpmFactor *= -1;
-    }
+    // if (
+    //   (this.scale.x <= 0.6 && this.scale.y <= 0.6 && this.scale.z <= 0.6) ||
+    //   (this.scale.x >= 10 && this.scale.y >= 10 && this.scale.z >= 10)
+    // ) {
+    //   console.log(this.scale, 'changing');
+    //   this.state.bpmFactor *= -1;
+    // }
+    TWEEN.update();
   }
 }
