@@ -72,7 +72,7 @@ class Main extends React.Component {
       width: 260,
       height: "100vh",
     };
-    const { islandScale, dirinten, lightcolor } = this.props.app;
+    const { islandScale, dirinten, lightcolor, song } = this.props.app;
 
     const welcomeTextStyle = {
       color: '#1DB954', // Spotify green
