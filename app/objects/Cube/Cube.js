@@ -58,7 +58,7 @@ export default class Cube extends Group {
       b: Math.round(flowersAudioFeatures.danceability * 255),
     };
 
-    // console.log(song_rgb);
+    console.log(song_rgb);
 
     var song_hex = rgbToHex(song_rgb);
 
@@ -144,7 +144,7 @@ export default class Cube extends Group {
     }
 
     // change color on section change
-    // modified by confidence factor of respective section
+    // modified by loudness of respective section
     if (this.state.sectionIndex < this.state.sections.length - 1) {
       const nextStart =
         this.state.sections[this.state.sectionIndex + 1].start * 1000;
@@ -155,12 +155,13 @@ export default class Cube extends Group {
         var rgb = hexToRgb(this.hex);
 
         // console.log(rgb)
-        // console.log(factor)
+        console.log(factor)
 
         // change to multiply if want to get darker for louder
         rgb.r = Math.round(rgb.r / factor);
         rgb.g = Math.round(rgb.g / factor);
         rgb.b = Math.round(rgb.b / factor);
+        console.log(rgb)
         if (rgb.r > 255) {
           rgb.r = 255;
         }
@@ -170,12 +171,12 @@ export default class Cube extends Group {
         if (rgb.b > 255) {
           rgb.b = 255;
         }
-        // console.log(rgb)
+        console.log(rgb)
         var hex = rgbToHex(rgb);
         var new_color = parseInt(hex.replace('#', '0x'));
         this.currcolor = new_color;
-        console.log(this.cubecolor);
-        console.log(new_color);
+        // console.log(this.cubecolor);
+        // console.log(new_color);
         // this.cubecolor = parseInt(hex_new.replace('#', '0x'));
         // this.hex = hex_new
 
