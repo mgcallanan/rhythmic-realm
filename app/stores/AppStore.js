@@ -2,13 +2,14 @@ const ISCALE = 'app/IslandScale';
 const DIRITEN = 'app/diriten';
 const LIGHTCOLOR = 'app/lightcolor';
 const SONG = 'app/song';
+import * as SPOTIFY_DATA from '../../data/spotify_data';
 
 export default (
   state = {
     islandScale: 1,
     dirinten: 1.15,
     lightcolor: '#FEFEFE',
-    song: 'Flowers',
+    song: 'flowers',
   },
   action = {}
 ) => {
@@ -32,9 +33,27 @@ export default (
       };
     }
     case SONG: {
+      let currentAudioAnalysis = {};
+      let currentAudioFeatures = {};
+      const song = action.value;
+      if (song == 'alaska') {
+        currentAudioAnalysis = SPOTIFY_DATA.alaskaAudioAnalysis;
+        currentAudioFeatures = SPOTIFY_DATA.alaskaAudioFeatures;
+      } else if (song == 'liz') {
+        currentAudioAnalysis = SPOTIFY_DATA.lizAudioAnalysis;
+        currentAudioFeatures = SPOTIFY_DATA.lizAudioFeatures;
+      } else if (song == 'good4u') {
+        currentAudioAnalysis = SPOTIFY_DATA.good4uAudioAnalysis;
+        currentAudioFeatures = SPOTIFY_DATA.good4uAudioFeatures;
+      } else if (song == 'flowers') {
+        currentAudioAnalysis = SPOTIFY_DATA.flowersAudioAnalysis;
+        currentAudioFeatures = SPOTIFY_DATA.flowersAudioFeatures;
+      }
       return {
         ...state,
-        song: action.value,
+        song: song,
+        currentAudioAnalysis: currentAudioAnalysis,
+        currentAudioFeatures: currentAudioFeatures,
       };
     }
     default:
