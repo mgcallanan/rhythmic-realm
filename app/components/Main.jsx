@@ -9,13 +9,11 @@ import {
 } from "../stores/AppStore";
 import RangeInputSet from "./RangeInputSet.jsx";
 import SongSelect from "./SongSelect.jsx";
-import SongPlayer from "./SongPlayer.jsx";
 
 class Main extends React.Component {
-
   state = {
     isLoggedIn: false,
-    userName: 'NONAME',
+    userName: "NONAME",
   };
 
   componentDidMount() {
@@ -25,22 +23,22 @@ class Main extends React.Component {
   handleToken = () => {
     const hash = window.location.hash
       .substring(1)
-      .split('&')
+      .split("&")
       .reduce((acc, item) => {
-        const [key, value] = item.split('=');
+        const [key, value] = item.split("=");
         acc[key] = value;
         return acc;
       }, {});
 
     if (hash.access_token) {
-      localStorage.setItem('spotify_access_token', hash.access_token);
-      window.location.hash = ''; // Clear the token from the URL
+      localStorage.setItem("spotify_access_token", hash.access_token);
+      window.location.hash = ""; // Clear the token from the URL
       this.fetchUserProfile(hash.access_token);
     }
   };
 
   async fetchUserProfile(accessToken) {
-    const response = await fetch('https://api.spotify.com/v1/me', {
+    const response = await fetch("https://api.spotify.com/v1/me", {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -50,26 +48,27 @@ class Main extends React.Component {
       const data = await response.json();
       // console.log(data)
       this.setState({ userName: data.display_name, isLoggedIn: true });
-      console.log(this.state.userName)
+      console.log(this.state.userName);
     } else {
-      console.error('Failed to fetch user profile');
+      console.error("Failed to fetch user profile");
     }
   }
 
   loginToSpotify = (event) => {
     event.preventDefault();
 
-    const CLIENT_ID = 'df2ae4f57ee94424b0371c4d16d075a6';
+    const CLIENT_ID = "df2ae4f57ee94424b0371c4d16d075a6";
     const REDIRECT_URI = window.location.origin;
-    const AUTH_URL = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=playlist-modify-public`;
-
+    const AUTH_URL = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(
+      REDIRECT_URI
+    )}&scope=playlist-modify-public`;
 
     window.location = AUTH_URL;
   };
 
-    render() {
+  render() {
     const wrapStyle = {
-      position: 'absolute',
+      position: "absolute",
       padding: 20,
       width: 260,
       height: "100vh",
@@ -77,24 +76,24 @@ class Main extends React.Component {
     const { islandScale, dirinten, lightcolor, song, objectcolor} = this.props.app;
 
     const welcomeTextStyle = {
-      color: '#1DB954', // Spotify green
-      fontWeight: 'bold',
-      fontSize: '1.2em',
-      marginTop: '1em',
+      color: "#1DB954", // Spotify green
+      fontWeight: "bold",
+      fontSize: "1.2em",
+      marginTop: "1em",
     };
 
     return (
       <div style={wrapStyle}>
         <h2>Rhythmic Realm</h2>
-        {/* <p>
+        <p>
           Three.js project biolerplate with ES6 and React/Redux controls. Design
-          Goal: to get projects up and running fast. Get the code on{' '}
-          <a href='https://github.com/edwinwebb/three-seed/'>GitHub</a>
+          Goal: to get projects up and running fast. Get the code on{" "}
+          <a href="https://github.com/edwinwebb/three-seed/">GitHub</a>
         </p>
         <form>
           <fieldset>
             <RangeInputSet
-              label={'Light Intensity'}
+              label={"Light Intensity"}
               min={0}
               max={3}
               step={0.05}
@@ -105,7 +104,7 @@ class Main extends React.Component {
             />
             {/* <label>Light Color</label>
             <input
-              type='color'
+              type="color"
               value={lightcolor}
               onChange={(e) => {
                 this.props.dispatch(setLightColor(e.target.value));
@@ -135,7 +134,6 @@ class Main extends React.Component {
             )}
           </fieldset>
         </form>
-        {/* <SongPlayer /> */}
       </div>
     );
   }
