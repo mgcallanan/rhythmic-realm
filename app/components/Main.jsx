@@ -92,7 +92,7 @@ class Main extends React.Component {
         </p>
         <form>
           <fieldset>
-            <RangeInputSet
+            {/* <RangeInputSet
               label={'Light Intensity'}
               min={0}
               max={3}
@@ -101,7 +101,7 @@ class Main extends React.Component {
               onChange={(v) => {
                 this.props.dispatch(setDirIten(v));
               }}
-            />
+            /> */}
             {/* <label>Light Color</label>
             <input
               type='color'
