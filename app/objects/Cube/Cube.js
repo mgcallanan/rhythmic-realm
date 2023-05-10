@@ -54,8 +54,16 @@ export default class Cube extends Group {
       if (this.state.currentAudioAnalysis && this.state.currentAudioFeatures) {
         this.state.bpmMilliSeconds =
           (60 / this.state.currentAudioAnalysis.track.tempo) * 1000;
-        this.state.sectionIndex = 0;
         this.state.sections = this.state.currentAudioAnalysis.sections;
+        for (let i = 0; i < this.state.sections.length - 1; i++) {
+          const currSongSec = songProgress * 1000;
+          if (
+            currSongSec >= this.state.sections[i] &&
+            currSongSec <= this.state.sections[i + 1]
+          ) {
+            this.state.sectionIndex = i + 1;
+          }
+        }
         this.computeCubeColor();
       }
     });
@@ -70,7 +78,7 @@ export default class Cube extends Group {
       b: Math.round(flowersAudioFeatures.danceability * 255),
     };
 
-    console.log(song_rgb);
+    // console.log(song_rgb);
 
     var song_hex = rgbToHex(song_rgb);
 
