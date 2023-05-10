@@ -119,7 +119,6 @@ const onAnimationFrameHandler = (timeStamp) => {
   const currentSongTime = currSongProgress + (timeStamp - currFetchTimeStamp);
   if (SECTION_INDEX < SECTIONS.length - 1) {
     const nextStart = SECTIONS[SECTION_INDEX + 1].start * 1000;
-    // console.log(SECTION_INDEX, SECTIONS, timeStamp % nextStart);
 
     if (currentSongTime % nextStart < 20) {
       LERPING = true;
@@ -170,11 +169,11 @@ render(
     <BrowserRouter basename={process.env.path}>
       <Routes>
         {/* For use during deployment */}
-        <Route path='/rhythmic-realm/' element={<Main/>} />
-        <Route path='/rhythmic-realm/callback' element={<Callback/>} />
+        <Route path="/rhythmic-realm/" element={<Main />} />
+        <Route path="/rhythmic-realm/callback" element={<Callback />} />
         {/* For use during production */}
-        <Route path='/' element={<Main/>} />
-        <Route path='/callback' element={<Callback/>} />
+        <Route path="/" element={<Main />} />
+        <Route path="/callback" element={<Callback />} />
       </Routes>
     </BrowserRouter>
   </Provider>,

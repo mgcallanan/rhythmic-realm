@@ -50,7 +50,6 @@ export default class Cube extends Group {
       this.state.currentAudioFeatures = currentAudioFeatures;
       this.state.fetchTimeStamp = fetchTimeStamp;
       this.state.songProgress = songProgress;
-      console.log(songProgress);
 
       if (this.state.currentAudioAnalysis && this.state.currentAudioFeatures) {
         this.state.bpmMilliSeconds =
@@ -208,8 +207,6 @@ export default class Cube extends Group {
         this.currcolor = new_color;
 
         this.state.currColor = new_color;
-        console.log(this.state.cubeColor);
-        console.log(new_color);
         // this.cubecolor = parseInt(hex_new.replace('#', '0x'));
         // this.hex = hex_new
 

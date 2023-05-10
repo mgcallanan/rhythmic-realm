@@ -31,7 +31,6 @@ class Main extends React.Component {
 
   checkTokenAndFetchUserProfile = () => {
     const accessToken = localStorage.getItem("spotify_access_token");
-    console.log("accessToken " + accessToken);
     if (accessToken) {
       this.fetchUserProfile(accessToken);
       this.fetchCurrentlyPlaying(accessToken);
@@ -48,7 +47,6 @@ class Main extends React.Component {
     if (response.ok) {
       const data = await response.json();
       this.setState({ userName: data.display_name, isLoggedIn: true });
-      console.log(this.state.userName);
       this.fetchCurrentlyPlaying(accessToken);
     } else {
       console.error("Failed to fetch user profile");
@@ -83,7 +81,6 @@ class Main extends React.Component {
       this.fetchTrack(accessToken);
       this.fetchTrackAudioFeatures(accessToken);
       this.fetchTrackAudioAnalysis(accessToken);
-      console.log(this.state.currentTrackID);
     } else {
       console.error("Failed to fetch currently playing song");
     }
@@ -103,7 +100,6 @@ class Main extends React.Component {
       const data = await response.json();
       // console.log(data)
       this.setState({ currentTrackName: data.name });
-      console.log(this.state.currentTrackName);
     } else {
       console.error("Failed to fetch currently playing song");
     }
@@ -123,7 +119,6 @@ class Main extends React.Component {
       const data = await response.json();
       // console.log(data)
       this.props.dispatch(setAudioAnalysis(data));
-      console.log(data);
     } else {
       console.error("Failed to fetch currently playing song");
     }
@@ -143,7 +138,6 @@ class Main extends React.Component {
       const data = await response.json();
       // console.log(data)
       this.props.dispatch(setAudioFeatures(data));
-      console.log(data);
     } else {
       console.error("Failed to fetch currently playing song");
     }
@@ -156,10 +150,10 @@ class Main extends React.Component {
     const CLIENT_ID = "df2ae4f57ee94424b0371c4d16d075a6";
 
     // Production redirect_uri
-    const REDIRECT_URI = window.location.origin + "/callback";
+    // const REDIRECT_URI = window.location.origin + "/callback";
 
     // Development redirect_uri
-    // const REDIRECT_URI = window.location.origin + "/rhythmic-realm/callback";
+    const REDIRECT_URI = window.location.origin + "/rhythmic-realm/callback";
 
     console.log("redirect_uri " + REDIRECT_URI);
     const AUTH_URL = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(
