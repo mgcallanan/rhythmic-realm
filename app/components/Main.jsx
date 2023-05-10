@@ -150,10 +150,10 @@ class Main extends React.Component {
     const CLIENT_ID = "df2ae4f57ee94424b0371c4d16d075a6";
 
     // Production redirect_uri
-    const REDIRECT_URI = window.location.origin + "/callback";
+    // const REDIRECT_URI = window.location.origin + "/callback";
 
-    // Development redirect_uri
-    // const REDIRECT_URI = window.location.origin + "/rhythmic-realm/callback";
+    // Deployment redirect_uri
+    const REDIRECT_URI = window.location.origin + "/rhythmic-realm/callback";
 
     console.log("redirect_uri " + REDIRECT_URI);
     const AUTH_URL = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(
