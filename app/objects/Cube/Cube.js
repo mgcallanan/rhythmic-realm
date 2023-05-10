@@ -155,13 +155,13 @@ export default class Cube extends Group {
         var rgb = hexToRgb(this.hex);
 
         // console.log(rgb)
-        console.log(factor)
+        // console.log(factor)
 
         // change to multiply if want to get darker for louder
         rgb.r = Math.round(rgb.r / factor);
         rgb.g = Math.round(rgb.g / factor);
         rgb.b = Math.round(rgb.b / factor);
-        console.log(rgb)
+        // console.log(rgb)
         if (rgb.r > 255) {
           rgb.r = 255;
         }
@@ -171,7 +171,7 @@ export default class Cube extends Group {
         if (rgb.b > 255) {
           rgb.b = 255;
         }
-        console.log(rgb)
+        // console.log(rgb)
         var hex = rgbToHex(rgb);
         var new_color = parseInt(hex.replace('#', '0x'));
         this.currcolor = new_color;

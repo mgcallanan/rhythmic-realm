@@ -84,6 +84,8 @@ export default class SeedScene extends Group {
     // console.log(this.particles);
     // console.log(this.movement);
 
+    this.rad = 0;
+
     this.color_obj = rgbToHex(song_rgb);
     this.color_ring = rgbToHex(song_rgb2);
 
@@ -111,8 +113,20 @@ export default class SeedScene extends Group {
     var second = timeStamp / 1000;
     // console.log(second)
     const { rotationSpeed, updateList } = this.state;
-    this.rotation.y = (rotationSpeed * timeStamp * flowersAudioFeatures.tempo) / 1000000;
+    this.rotation.y = (rotationSpeed * timeStamp * flowersAudioFeatures.tempo) / 500000;
     this.rotation.z = (rotationSpeed * timeStamp * flowersAudioFeatures.tempo) / 100000;
+
+    // var ax = new THREE.Vector3(0.5,0.5,0.5);
+    // ax.normalize();
+    // var cube = updateList[0];
+    var obj1 = this.objects[0];
+    var obj2 = this.objects[1];
+    var ring = this.objects[2];
+
+    // obj2.rotateOnAxis(ax, this.rad + 0.3);
+
+    ring.rotateY(flowersAudioFeatures.tempo / 15000);
+    ring.rotateX(flowersAudioFeatures.tempo / 15000);
 
     // tester code for object movement
     // if (2 < second < 10) {
@@ -160,7 +174,6 @@ export default class SeedScene extends Group {
     // console.log(this.children)
     // var obj_r = this.objects[0];
     // var obj_l = this.objects[1];
-    var ring = this.objects[2];
     
     if (second > this.state.sections[this.state.sectionIndex].start + this.state.sections[this.state.sectionIndex].duration) {
       // console.log(second);
@@ -173,10 +186,10 @@ export default class SeedScene extends Group {
       this.state.sectionIndex += 1;
       var factor = this.state.sections[this.state.sectionIndex].key;
       factor += 1;
-      factor /= 6;
-      console.log('factor')
-      console.log(obj_color);
-      console.log(factor)
+      factor /= 2;
+      // console.log('factor')
+      // console.log(obj_color);
+      // console.log(factor)
       
       obj_color.r = Math.round(obj_color.r * factor);
       obj_color.g = Math.round(obj_color.g * factor);
@@ -185,6 +198,8 @@ export default class SeedScene extends Group {
       ring_color.r = Math.round(ring_color.r * factor);
       ring_color.g = Math.round(ring_color.g * factor);
       ring_color.b = Math.round(ring_color.b * factor);
+
+      // console.log(obj_color);
 
       if (obj_color.r > 255) {
         obj_color.r = 255;
@@ -205,7 +220,7 @@ export default class SeedScene extends Group {
         ring_color.b = 255;
       }
 
-      console.log(obj_color);
+      // console.log(obj_color);
 
       var obj_hex = parseInt(rgbToHex(obj_color).replace('#', '0x'));
       var ring_hex = parseInt(rgbToHex(ring_color).replace('#', '0x'));
@@ -217,9 +232,6 @@ export default class SeedScene extends Group {
       // console.log(this.objects)
       // console.log(this.children)
     }
-
-    ring.rotateY(flowersAudioFeatures.tempo / 15000);
-    ring.rotateX(flowersAudioFeatures.tempo / 15000);
 
     // Call update for each object in the updateList
     for (const obj of updateList) {
