@@ -102,7 +102,7 @@ export default class SeedScene extends Group {
     const ring = new THREE.Mesh(r_geometry, material2);
     this.state.ring = ring;
 
-    var part_geometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+    var part_geometry = new THREE.BoxGeometry(0.15, 0.15, 0.15);
     // const obj_tmp = new THREE.Mesh(part_geometry, material);
     // this.tmp = obj_tmp;
     this.particles = [];
@@ -194,6 +194,12 @@ export default class SeedScene extends Group {
     var obj2 = this.objects[1];
     var ring = this.objects[2];
 
+    if (this.state.mode == 0) {
+      var box = new THREE.BoxGeometry(0.6, 0.6, 0.6);
+      this.objects[0].geometry = box;
+      this.objects[1].geometry = box;
+    }
+
     // obj2.rotateOnAxis(ax, this.rad + 0.3);
 
     ring.rotateY(this.state.tempo / 15000);
@@ -247,73 +253,71 @@ export default class SeedScene extends Group {
     // console.log(this.children)
     // var obj_r = this.objects[0];
     // var obj_l = this.objects[1];
-    if (this.state.sections[this.state.sectionIndex]) {
-      if (
-        second >
-        this.state.sections[this.state.sectionIndex].start +
-          this.state.sections[this.state.sectionIndex].duration
-      ) {
-        // console.log(second);
-        // console.log(this.state.sections[this.state.sectionIndex]);
-        // console.log(this.color_obj);
-        var obj_color = hexToRgb(this.color_obj);
-        // console.log(obj_color);
-        var ring_color = hexToRgb(this.color_ring);
+    if (
+      second >
+      this.state.sections[this.state.sectionIndex].start +
+        this.state.sections[this.state.sectionIndex].duration
+    ) {
+      // console.log(second);
+      // console.log(this.state.sections[this.state.sectionIndex]);
+      // console.log(this.color_obj);
+      var obj_color = hexToRgb(this.color_obj);
+      // console.log(obj_color);
+      var ring_color = hexToRgb(this.color_ring);
 
-        this.state.sectionIndex += 1;
-        var factor = this.state.sections[this.state.sectionIndex]
-          ? this.state.sections[this.state.sectionIndex].key
-          : 0;
-        factor += 1;
-        factor /= 2;
-        // console.log('factor');
-        // console.log(obj_color);
-        // console.log(factor);
+      this.state.sectionIndex += 1;
+      var factor = this.state.sections[this.state.sectionIndex]
+        ? this.state.sections[this.state.sectionIndex].key
+        : 0;
+      factor += 1;
+      factor /= 2;
+      // console.log('factor');
+      // console.log(obj_color);
+      // console.log(factor);
 
-        obj_color.r = Math.round(obj_color.r * factor);
-        obj_color.g = Math.round(obj_color.g * factor);
-        obj_color.b = Math.round(obj_color.b * factor);
+      obj_color.r = Math.round(obj_color.r * factor);
+      obj_color.g = Math.round(obj_color.g * factor);
+      obj_color.b = Math.round(obj_color.b * factor);
 
-        ring_color.r = Math.round(ring_color.r * factor);
-        ring_color.g = Math.round(ring_color.g * factor);
-        ring_color.b = Math.round(ring_color.b * factor);
+      ring_color.r = Math.round(ring_color.r * factor);
+      ring_color.g = Math.round(ring_color.g * factor);
+      ring_color.b = Math.round(ring_color.b * factor);
 
-        // console.log(obj_color);
+      // console.log(obj_color);
 
-        if (obj_color.r > 255) {
-          obj_color.r = 255;
-        }
-        if (obj_color.g > 255) {
-          obj_color.g = 255;
-        }
-        if (obj_color.b > 255) {
-          obj_color.b = 255;
-        }
-        if (ring_color.r > 255) {
-          ring_color.r = 255;
-        }
-        if (ring_color.g > 255) {
-          ring_color.g = 255;
-        }
-        if (ring_color.b > 255) {
-          ring_color.b = 255;
-        }
-
-        // console.log(obj_color);
-
-        var obj_hex = parseInt(rgbToHex(obj_color).replace('#', '0x'));
-        var ring_hex = parseInt(rgbToHex(ring_color).replace('#', '0x'));
-
-        this.objects[0].material.color.set(obj_hex);
-        this.objects[1].material.color.set(obj_hex);
-        this.objects[2].material.color.set(ring_hex);
-
-        // console.log(this.objects)
-        // console.log(this.children)
+      if (obj_color.r > 255) {
+        obj_color.r = 255;
       }
-      this.rotation.x = (rotationSpeed * currentSongTime) / 1000;
-      this.rotation.y = (rotationSpeed * currentSongTime) / 1000;
+      if (obj_color.g > 255) {
+        obj_color.g = 255;
+      }
+      if (obj_color.b > 255) {
+        obj_color.b = 255;
+      }
+      if (ring_color.r > 255) {
+        ring_color.r = 255;
+      }
+      if (ring_color.g > 255) {
+        ring_color.g = 255;
+      }
+      if (ring_color.b > 255) {
+        ring_color.b = 255;
+      }
+
+      // console.log(obj_color);
+
+      var obj_hex = parseInt(rgbToHex(obj_color).replace('#', '0x'));
+      var ring_hex = parseInt(rgbToHex(ring_color).replace('#', '0x'));
+
+      this.objects[0].material.color.set(obj_hex);
+      this.objects[1].material.color.set(obj_hex);
+      this.objects[2].material.color.set(ring_hex);
+
+      // console.log(this.objects)
+      // console.log(this.children)
     }
+    this.rotation.x = (rotationSpeed * currentSongTime) / 1000;
+    this.rotation.y = (rotationSpeed * currentSongTime) / 1000;
     // Call update for each object in the updateList
     for (const obj of updateList) {
       obj.update(timeStamp);

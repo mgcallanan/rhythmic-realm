@@ -66,6 +66,7 @@ class Main extends React.Component {
     );
 
     if (response.ok) {
+      console.log("hey");
       const data = await response.json();
       // console.log(data)
       this.setState({
