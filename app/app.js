@@ -20,6 +20,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import store from './stores/store';
 import Main from './components/Main.jsx';
+import Callback from './components/Callback.jsx';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // Styles
@@ -45,6 +46,9 @@ const camera = new PerspectiveCamera(
 );
 const renderer = new Renderer({ antialias: false }, scene, camera);
 
+let currFetchTimeStamp = 0;
+let currSongProgress = 0;
+
 // Post processing
 const rPass = new RenderPass(scene, camera);
 const FXAA = new ShaderPass(FXAAShader);
@@ -59,6 +63,8 @@ renderer.addPass(FXAA);
 // Update FXAA on resize from Redux
 store.subscribe(() => {
   const { width, height, resolution } = store.getState().Renderer;
+  const { fetchTimeStamp, songProgress, currentAudioAnalysis } =
+    store.getState().App;
   // set camera
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
@@ -67,6 +73,16 @@ store.subscribe(() => {
     width * resolution,
     height * resolution
   );
+
+  currFetchTimeStamp = fetchTimeStamp;
+  currSongProgress = songProgress;
+  SECTIONS = currentAudioAnalysis.sections;
+  for (let i = 0; i < SECTIONS.length - 1; i++) {
+    const currSongSec = currSongProgress * 1000;
+    if (currSongSec >= SECTIONS[i] && currSongSec <= SECTIONS[i + 1]) {
+      SECTIONS_INDEX = i + 1;
+    }
+  }
 });
 
 // Camera, Controls and Scene
@@ -100,11 +116,12 @@ const onAnimationFrameHandler = (timeStamp) => {
   //lerp background color on section change
   // let newColor = new THREE.Color();
   // let currentColor = new THREE.Color();
+  const currentSongTime = currSongProgress + (timeStamp - currFetchTimeStamp);
   if (SECTION_INDEX < SECTIONS.length - 1) {
     const nextStart = SECTIONS[SECTION_INDEX + 1].start * 1000;
     // console.log(SECTION_INDEX, SECTIONS, timeStamp % nextStart);
 
-    if (timeStamp % nextStart < 20) {
+    if (currentSongTime % nextStart < 20) {
       LERPING = true;
       SECTION_INDEX += 1;
       NEW_COLOR.setHex(Math.random() * 0xffffff);
@@ -150,10 +167,14 @@ renderer.start();
 // React
 render(
   <Provider store={store}>
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.path}>
       <Routes>
-        <Route path="/" element={<Main />} />
-        {/* <Route path='/callback' element={<Callback/>} /> */}
+        {/* For use during deployment */}
+        <Route path='/rhythmic-realm/' element={<Main/>} />
+        <Route path='/rhythmic-realm/callback' element={<Callback/>} />
+        {/* For use during production */}
+        <Route path='/' element={<Main/>} />
+        <Route path='/callback' element={<Callback/>} />
       </Routes>
     </BrowserRouter>
   </Provider>,

@@ -113,6 +113,7 @@ export default class SeedScene extends Group {
     var second = timeStamp / 1000;
     // console.log(second)
     const { rotationSpeed, updateList } = this.state;
+
     this.rotation.y = (rotationSpeed * timeStamp * flowersAudioFeatures.tempo) / 500000;
     this.rotation.z = (rotationSpeed * timeStamp * flowersAudioFeatures.tempo) / 100000;
 
@@ -232,6 +233,8 @@ export default class SeedScene extends Group {
       // console.log(this.objects)
       // console.log(this.children)
     }
+    this.rotation.x = (rotationSpeed * timeStamp) / 1000;
+    this.rotation.y = (rotationSpeed * timeStamp) / 1000;
 
     // Call update for each object in the updateList
     for (const obj of updateList) {
