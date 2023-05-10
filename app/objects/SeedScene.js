@@ -64,7 +64,25 @@ export default class SeedScene extends Group {
     const obj_l = new THREE.Mesh(geometry, material);
     // console.log(cube_r)
     const ring = new THREE.Mesh(r_geometry, material2);
-    // const ring2 = new THREE.Mesh(r_geometry, material);
+
+    var part_geometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+    // const obj_tmp = new THREE.Mesh(part_geometry, material);
+    // this.tmp = obj_tmp;
+    this.particles = [];
+    this.movement = [[1, 1, 20],
+                    [1, 1, -20],
+                    [20, 1, 1],
+                    [-20, 1, 1],
+                    [1, 20, 1],
+                    [1, -20, 1]];
+
+    for (let i = 0; i < 6; i++) {
+      const obj = new THREE.Mesh(part_geometry, material);
+      this.particles.push(obj);
+      this.add(this.particles[i]);
+    }
+    // console.log(this.particles);
+    // console.log(this.movement);
 
     this.color_obj = rgbToHex(song_rgb);
     this.color_ring = rgbToHex(song_rgb2);
@@ -91,9 +109,53 @@ export default class SeedScene extends Group {
 
   update(timeStamp) {
     var second = timeStamp / 1000;
+    // console.log(second)
     const { rotationSpeed, updateList } = this.state;
     this.rotation.y = (rotationSpeed * timeStamp * flowersAudioFeatures.tempo) / 1000000;
     this.rotation.z = (rotationSpeed * timeStamp * flowersAudioFeatures.tempo) / 100000;
+
+    // tester code for object movement
+    // if (2 < second < 10) {
+    //   var progress = Math.min(second / 8, 1);
+    //   this.tmp.position.x = progress;
+    //   this.tmp.position.y = progress;
+    //   this.tmp.position.z = 10 * progress;
+    // }
+    // if (second > 10) {
+    //   console.log("second > 10")
+    //   this.tmp.position.x = 0;
+    //   this.tmp.position.y = 0;
+    //   this.tmp.position.z = 0;
+    // }
+
+    // particle animation
+    if (this.state.sectionIndex > 0) {
+      var section = this.state.sections[this.state.sectionIndex];
+      const midpoint = section.start + (section.duration / 2);
+      // console.log(midpoint);
+      if (section.start < second && second < midpoint) {
+        // console.log(second)
+        var progress = Math.min((second - section.start) / (section.duration / 2), 1);
+        // makes it move faster in the beginning
+        progress = 1 - Math.pow(1 - progress, 3);
+        // console.log(progress)
+        for (let i = 0; i < 6; i++) {
+          const mov = this.movement[i];
+          this.particles[i].position.x = mov[0] * progress;
+          this.particles[i].position.y = mov[1] * progress;
+          this.particles[i].position.z = mov[2] * progress;
+        }
+      }
+      else if (second > midpoint) {
+        // console.log("back to origin")
+        for (let i = 0; i < 6; i++) {
+          // obj = this.particles[i];
+          this.particles[i].position.x = 0;
+          this.particles[i].position.y = 0;
+          this.particles[i].position.z = 0;
+        }
+      }
+    }
 
     // console.log(this.children)
     // var obj_r = this.objects[0];
@@ -152,8 +214,8 @@ export default class SeedScene extends Group {
       this.objects[1].material.color.set(obj_hex);
       this.objects[2].material.color.set(ring_hex);
 
-      console.log(this.objects)
-      console.log(this.children)
+      // console.log(this.objects)
+      // console.log(this.children)
     }
 
     ring.rotateY(flowersAudioFeatures.tempo / 15000);
