@@ -166,6 +166,7 @@ class Main extends React.Component {
       REDIRECT_URI
     )}&scope=${scope}`;
 
+
     window.location = AUTH_URL;
   };
 
@@ -196,8 +197,8 @@ class Main extends React.Component {
         </p>
         <form>
           <fieldset>
-            <RangeInputSet
-              label={"Light Intensity"}
+            {/* <RangeInputSet
+              label={'Light Intensity'}
               min={0}
               max={3}
               step={0.05}
@@ -205,7 +206,7 @@ class Main extends React.Component {
               onChange={(v) => {
                 this.props.dispatch(setDirIten(v));
               }}
-            />
+            /> */}
             {/* <label>Light Color</label>
             <input
               type="color"
