@@ -9,7 +9,7 @@
 import Renderer from './Renderer/EffectRenderer';
 import { Scene, PerspectiveCamera, Vector3 } from 'three';
 import * as THREE from 'three'; // used for Orbit Controls
-import SeedScene from './objects/Scene.js';
+import SeedScene from './objects/SeedScene.js';
 import { ShaderPass, RenderPass } from './Renderer/EffectRenderer';
 import { FXAAShader } from './Shaders/fxaa/fxaa';
 import { flowersAudioAnalysis } from '../data/spotify_data';
@@ -28,11 +28,15 @@ import './styles.css';
 
 let SECTION_INDEX = 0;
 let SECTIONS = flowersAudioAnalysis.sections;
-let LAST_MOD = 0;
+let LERPING = false;
+let START_LERP_TIMESTAMP = 0;
+let LERP_LENGTH = 10000;
 
+let CURRENT_COLOR = new THREE.Color(0x212121);
+let NEW_COLOR = new THREE.Color();
 // Set up scene
 const scene = new Scene();
-scene.background = new THREE.Color(0x212121);
+scene.background = CURRENT_COLOR;
 
 const camera = new PerspectiveCamera(
   75,
@@ -71,7 +75,9 @@ const OrbitControls = require('three-orbit-controls')(THREE); // yuk
 const seedScene = new SeedScene();
 
 new OrbitControls(camera, renderer.domElement);
+// scene.add(seedScene);
 scene.add(seedScene);
+
 camera.position.set(-2, 2, 10);
 camera.lookAt(new Vector3(0, 0, 0));
 
@@ -93,18 +99,38 @@ document.body.appendChild(style);
 // Render loop
 const onAnimationFrameHandler = (timeStamp) => {
   //lerp background color on section change
+  // let newColor = new THREE.Color();
+  // let currentColor = new THREE.Color();
   if (SECTION_INDEX < SECTIONS.length - 1) {
     const nextStart = SECTIONS[SECTION_INDEX + 1].start * 1000;
     // console.log(SECTION_INDEX, SECTIONS, timeStamp % nextStart);
 
     if (timeStamp % nextStart < 20) {
+      LERPING = true;
       SECTION_INDEX += 1;
-      console.log('next');
+      NEW_COLOR.setHex(Math.random() * 0xffffff);
+
+      CURRENT_COLOR.copy(scene.background);
+
+      // from here: https://jsfiddle.net/prisoner849/1k397beg/
+
+      START_LERP_TIMESTAMP = timeStamp;
+    }
+  }
+
+  if (LERPING) {
+    let timeSinceLerp = timeStamp - START_LERP_TIMESTAMP;
+    let progress = timeSinceLerp / LERP_LENGTH;
+    scene.background.copy(CURRENT_COLOR).lerp(NEW_COLOR, progress);
+    if (progress >= 1.0) {
+      LERPING = false;
+      scene.background.copy(NEW_COLOR);
     }
   }
   // controls.update();
   // renderer.render(scene, camera);
   seedScene.update(timeStamp);
+  // scene.update(timeStamp);
   window.requestAnimationFrame(onAnimationFrameHandler);
 
   // var startColor = new THREE.Color(0xff0000);

@@ -5,6 +5,7 @@ import {
   setDirIten,
   setLightColor,
   setSong,
+  setObjectColor,
 } from "../stores/AppStore";
 import RangeInputSet from "./RangeInputSet.jsx";
 import SongSelect from "./SongSelect.jsx";
@@ -37,6 +38,7 @@ class Main extends React.Component {
     if (response.ok) {
       const data = await response.json();
       this.setState({ userName: data.display_name, isLoggedIn: true });
+      console.log(this.state.userName);
     } else {
       console.error("Failed to fetch user profile");
     }
@@ -56,24 +58,23 @@ class Main extends React.Component {
     console.log("redirect_uri " + REDIRECT_URI)
     const AUTH_URL = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=playlist-modify-public`;
 
-  
     window.location = AUTH_URL;
   };
-  
-    render() {
+
+  render() {
     const wrapStyle = {
-      position: 'absolute',
+      position: "absolute",
       padding: 20,
       width: 260,
       height: "100vh",
     };
-    const { islandScale, dirinten, lightcolor, song } = this.props.app;
+    const { islandScale, dirinten, lightcolor, song, objectcolor} = this.props.app;
 
     const welcomeTextStyle = {
-      color: '#1DB954', // Spotify green
-      fontWeight: 'bold',
-      fontSize: '1.2em',
-      marginTop: '1em',
+      color: "#1DB954", // Spotify green
+      fontWeight: "bold",
+      fontSize: "1.2em",
+      marginTop: "1em",
     };
 
     return (
@@ -81,13 +82,13 @@ class Main extends React.Component {
         <h2>Rhythmic Realm</h2>
         <p>
           Three.js project biolerplate with ES6 and React/Redux controls. Design
-          Goal: to get projects up and running fast. Get the code on{' '}
-          <a href='https://github.com/edwinwebb/three-seed/'>GitHub</a>
+          Goal: to get projects up and running fast. Get the code on{" "}
+          <a href="https://github.com/edwinwebb/three-seed/">GitHub</a>
         </p>
         <form>
           <fieldset>
             <RangeInputSet
-              label={'Light Intensity'}
+              label={"Light Intensity"}
               min={0}
               max={3}
               step={0.05}
@@ -96,16 +97,23 @@ class Main extends React.Component {
                 this.props.dispatch(setDirIten(v));
               }}
             />
-            <label>Light Color</label>
+            {/* <label>Light Color</label>
             <input
-              type='color'
+              type="color"
               value={lightcolor}
               onChange={(e) => {
                 this.props.dispatch(setLightColor(e.target.value));
               }}
-            />
+            {/* <label>Cube Color</label>
+            <input
+              type="color"
+              value={objectcolor}
+              onChange={(f) => {
+                this.props.dispatch(setObjectColor(f.target.value));
+              }}
+            /> */}
             <SongSelect
-              label={'Current Song'}
+              label={"Current Song"}
               min={0}
               max={3}
               step={0.05}
