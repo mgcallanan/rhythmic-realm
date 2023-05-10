@@ -34,7 +34,8 @@ export default class SeedScene extends Group {
 
   update(timeStamp) {
     const { rotationSpeed, updateList } = this.state;
-    this.rotation.y = (rotationSpeed * timeStamp) / 10000;
+    this.rotation.x = (rotationSpeed * timeStamp) / 1000;
+    this.rotation.y = (rotationSpeed * timeStamp) / 1000;
 
     // Call update for each object in the updateList
     for (const obj of updateList) {
