@@ -26,23 +26,14 @@ class Main extends React.Component {
   };
 
   componentDidMount() {
-    this.handleToken();
+    this.checkTokenAndFetchUserProfile();
   }
 
-  handleToken = () => {
-    const hash = window.location.hash
-      .substring(1)
-      .split("&")
-      .reduce((acc, item) => {
-        const [key, value] = item.split("=");
-        acc[key] = value;
-        return acc;
-      }, {});
-
-    if (hash.access_token) {
-      localStorage.setItem("spotify_access_token", hash.access_token);
-      window.location.hash = ""; // Clear the token from the URL
-      this.fetchUserProfile(hash.access_token);
+  checkTokenAndFetchUserProfile = () => {
+    const accessToken = localStorage.getItem("spotify_access_token");
+    console.log("accessToken " + accessToken);
+    if (accessToken) {
+      this.fetchUserProfile(accessToken);
     }
   };
 
@@ -55,14 +46,13 @@ class Main extends React.Component {
 
     if (response.ok) {
       const data = await response.json();
-      // console.log(data)
       this.setState({ userName: data.display_name, isLoggedIn: true });
       console.log(this.state.userName);
       this.fetchCurrentlyPlaying(accessToken);
     } else {
       console.error("Failed to fetch user profile");
     }
-  }
+  } 
 
   async;
 
@@ -160,14 +150,18 @@ class Main extends React.Component {
   loginToSpotify = (event) => {
     event.preventDefault();
 
-    const CLIENT_ID = "23592208fe9f406e92d5fd74de9e399e";
-    const REDIRECT_URI = window.location.origin;
-
     const scope = "playlist-modify-public+user-read-currently-playing";
 
-    const AUTH_URL = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(
-      REDIRECT_URI
-    )}&scope=${scope}`;
+    const CLIENT_ID = 'df2ae4f57ee94424b0371c4d16d075a6';
+
+    // Production redirect_uri
+    // const REDIRECT_URI = window.location.origin + "/callback";
+
+    // Development redirect_uri
+    const REDIRECT_URI = window.location.origin + "/rhythmic-realm/callback";
+    
+    console.log("redirect_uri " + REDIRECT_URI)
+    const AUTH_URL = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${scope}`;
 
     window.location = AUTH_URL;
   };
